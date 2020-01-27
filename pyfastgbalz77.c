@@ -6,7 +6,7 @@
 
 static PyObject* pyfastgbalz77_SizeTooLargeError;
 
-void pyfastgbalz77_get_match_length_and_distance(char* new_data, int new_length, char* old_data, int old_length, int* length, int* distance) {
+void pyfastgbalz77_get_match_length_and_distance(char* new_data, int new_length, char* old_data, int old_length, int min_distance, int* length, int* distance) {
   *length = 0; // The length of the match
   *distance = 0; // The distance backwards to the start of the match
   
@@ -15,7 +15,8 @@ void pyfastgbalz77_get_match_length_and_distance(char* new_data, int new_length,
   }
   
   // Try every possible offset in the already compressed data.
-  for (int i = 0; i < old_length; i++) {
+  int max_start_to_check = old_length - min_distance;
+  for (int i = 0; i < max_start_to_check; i++) {
     int current_old_start = i;
     
     // Figure out how many bytes can be copied at this offset.
@@ -40,9 +41,10 @@ void pyfastgbalz77_get_match_length_and_distance(char* new_data, int new_length,
 
 static PyObject* pyfastgbalz77_compress(PyObject* self, PyObject* args) {
   PyObject* src_bytes;
+  int for_16_bit;
   char* src;
   
-  if (!PyArg_ParseTuple(args, "S", &src_bytes)) {
+  if (!PyArg_ParseTuple(args, "Sp", &src_bytes, &for_16_bit)) {
     return NULL; // Error already raised
   }
   
@@ -55,6 +57,12 @@ static PyObject* pyfastgbalz77_compress(PyObject* self, PyObject* args) {
   if (src_size > LZ77_MAX_SUPPORTED_SIZE) {
     PyErr_SetString(pyfastgbalz77_SizeTooLargeError, "Data larger than 0xFFFFFF bytes cannot be LZ77 compressed.");
     return NULL;
+  }
+  
+  int min_distance = 0;
+  if (for_16_bit) {
+    // The GBA's 16 bit LZ77 decompression function requires the distance to be at least 1 byte backwards instead of 0 bytes.
+    min_distance = 1;
   }
   
   char* dst;
@@ -89,6 +97,7 @@ static PyObject* pyfastgbalz77_compress(PyObject* self, PyObject* args) {
       min(src_size-src_off, 0x12),
       &src[src_off-old_length],
       old_length,
+      min_distance,
       &match_length, &match_distance
     );
     

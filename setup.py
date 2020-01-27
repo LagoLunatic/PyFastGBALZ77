@@ -2,14 +2,14 @@ from distutils.core import setup, Extension
 
 module1 = Extension('pyfastgbalz77',
                     define_macros = [('MAJOR_VERSION', '1'),
-                                     ('MINOR_VERSION', '0')],
+                                     ('MINOR_VERSION', '1')],
                     include_dirs = ['C:/Python36-64/include'],
                     libraries = [],
                     library_dirs = ['C:/Python36-64/libs'],
                     sources = ['pyfastgbalz77.c'])
 
 setup (name = 'Python Fast GBA LZ77 Compression',
-       version = '1.0',
+       version = '1.1',
        description = 'GBA LZ77 compression written in C.',
        author = 'LagoLunatic',
        author_email = '',

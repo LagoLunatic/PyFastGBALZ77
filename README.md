@@ -15,6 +15,7 @@ Currently only supports compression because decompression isn't slow even with n
 
 Call `pyfastgbalz77.compress` with a bytes object containing the data you wish to compress.  
 It will return the compressed data as a new bytes object.  
+The second argument should be a boolean for whether the compressed data should be made compatible with the GBA's 16-bit LZ77 decompression function. If False, only the 8-bit decompression function will be able to decompress this data, but the size will be slightly smaller.  
 
 Example:
 ```py
@@ -23,7 +24,7 @@ import pyfastgbalz77
 with open("some_uncompressed_file.bin", "rb") as f:
   uncompressed_bytes = f.read()
 
-compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes)
+compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
 
 with open("some_compressed_file.bin", "wb") as f:
   f.write(compressed_bytes)
