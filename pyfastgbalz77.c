@@ -70,6 +70,9 @@ static PyObject* pyfastgbalz77_compress(PyObject* self, PyObject* args) {
   // The max size the compressed data can be is a bit over 12.5% more than the uncompressed data, but we use twice the uncompressed size as the buffer size to be safe and simplify things a bit.
   int max_possible_comp_size = src_size*2;
   dst = malloc(max_possible_comp_size);
+  if(!dst) {
+    return PyErr_NoMemory();
+  }
   int src_off = 0;
   int dst_off = 0;
   
