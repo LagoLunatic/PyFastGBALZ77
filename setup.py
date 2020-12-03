@@ -8,7 +8,7 @@ module1 = Extension('pyfastgbalz77',
                     library_dirs = [],
                     sources = ['pyfastgbalz77.c'])
 
-setup (name = 'Python Fast GBA LZ77 Compression',
+setup (name = 'PyFastGBALZ77',
        version = '1.1',
        description = 'GBA LZ77 compression written in C.',
        author = 'LagoLunatic',
