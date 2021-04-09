@@ -1,6 +1,15 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+#undef min
+#undef max
+inline int min(int a, int b) {
+  return a < b ? a : b;
+}
+inline int max(int a, int b) {
+  return a > b ? a : b;
+}
+
 #define LZ77_MAGIC_BYTE 0x10
 #define LZ77_MAX_SUPPORTED_SIZE 0xFFFFFF
 
